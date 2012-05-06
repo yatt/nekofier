@@ -1,9 +1,9 @@
 cron:
 - description: tweet it
   url: /batch/tweet
-  schedule: every day 11:55
+  schedule: every day 23:55
   timezone: Asia/Tokyo
 - description: update photo link
   url: /batch/updatelink
-  schedule: every day 11:50
+  schedule: every day 23:50
   timezone: Asia/Tokyo
