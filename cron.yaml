@@ -1,0 +1,7 @@
+cron:
+- description: tweet it
+  url: /batch/tweet
+  schedule: every day 11:55
+- description: update photo link
+  url: /batch/updatelink
+  schedule: every day 11:50
