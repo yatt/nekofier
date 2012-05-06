@@ -35,7 +35,7 @@ class MainHandler(webapp2.RequestHandler):
         lst = api.statuses.home_timeline()
         
         u = api.account.verify_credentials().screen_name
-        tl = '<br>'.join([s.user.screen_name + ' ' + s.text for s in lst])
+        tl = '<br>'.join([twtime(s.created_at) + ' ' + s.text for s in lst])
         htmldoc = """
 <!DOCTYPE html>
 <html>
@@ -47,18 +47,22 @@ class MainHandler(webapp2.RequestHandler):
         <h3>hello, %s!</h3>
         <p><a href="./logout">logout</a></p>
         %s
+<div>%s</div>
     </body>
 </html>
-    """ % (u, tl)
+    """ % (u, tl,today())
         self.response.out.write(htmldoc)
 
 
 def twtime(created_at):
     unix_time = calendar.timegm(time.strptime(created_at, '%a %b %d %H:%M:%S +0000 %Y'))
+    unix_time += 32400 # GMT -> JST
     ut = time.localtime(unix_time)
     return time.strftime('%Y%m%d', ut)
+
+
 def today(fmt='%04d%02d%02d'):
-    x = datetime.datetime.today()
+    x = datetime.datetime.today() + datetime.timedelta(hours=9)
     return fmt % (x.year, x.month, x.day)
 
 class TweetHandler(webapp2.RequestHandler):
@@ -78,8 +82,8 @@ class TweetHandler(webapp2.RequestHandler):
 
         t = today()
         n = 0
-        for status in api.statuses.user_timeline(count = 200):
-            if t == twtime(status.create_at):
+        for status in api.statuses.user_timeline(count = 200, include_rts = True):
+            if t == twtime(status.created_at):
                 n += 1
         n = n if n < 200 else '%d+' % n
 
@@ -108,7 +112,7 @@ class UpdateLinkHandler(webapp2.RequestHandler):
     def get(self):
         try:
             url = photolink.get()
-            lnk = photolink.all().get()
+            lnk = PhotoLink.all().get()
             lnk.link = url
             lnk.put()
         except Exception, e:
