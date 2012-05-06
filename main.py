@@ -28,32 +28,6 @@ def restore_api(access_token):
         logging.error(e)
         raise e
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        # fetch home timeline
-        api = restore_api(AccessToken.all().get())
-        lst = api.statuses.home_timeline()
-        
-        u = api.account.verify_credentials().screen_name
-        tl = '<br>'.join([twtime(s.created_at) + ' ' + s.text for s in lst])
-        htmldoc = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <title>timeline</title>
-    </head>
-    <body>
-        <h3>hello, %s!</h3>
-        <p><a href="./logout">logout</a></p>
-        %s
-<div>%s</div>
-    </body>
-</html>
-    """ % (u, tl,today())
-        self.response.out.write(htmldoc)
-
-
 def twtime(created_at):
     unix_time = calendar.timegm(time.strptime(created_at, '%a %b %d %H:%M:%S +0000 %Y'))
     unix_time += 32400 # GMT -> JST
@@ -120,7 +94,6 @@ class UpdateLinkHandler(webapp2.RequestHandler):
 
            
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
     ('/batch/tweet', TweetHandler),
     ('/batch/updatelink', UpdateLinkHandler),
     ],
