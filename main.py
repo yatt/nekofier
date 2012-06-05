@@ -47,7 +47,7 @@ class TweetHandler(webapp2.RequestHandler):
             param = self.analyze(atok, api)
             status = self.apply_template(param)
             api.statuses.update(status = status)
-            logging.log('success %s(%s)' % (user.name, param['screen_name']))
+            logging.log('success tweet for %s' % param['screen_name'])
         except Exception, e:
             logging.error(e)
 
