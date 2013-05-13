@@ -2,7 +2,7 @@
 import urllib
 import urllib2
 import re
-import simplejson as json
+import json
 
 def get():
     return get_20130428()
