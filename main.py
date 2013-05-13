@@ -22,7 +22,7 @@ def restore_api(access_token):
         atok,asec = access_token.access_token, access_token.access_token_secret
         auth.setAccessToken(atok, asec)
 
-        api = twitterlib.API(auth)
+        api = twitterlib.API(auth, version=1.1)
         return api
     except Exception, e:
         logging.error(e)
