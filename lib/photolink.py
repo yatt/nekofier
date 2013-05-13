@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import re
 import json
+import random
 
 def get():
     return get_20130428()
@@ -17,7 +18,7 @@ def get_20130428():
     conn = opener.open('http://nekostagram.heroku.com/')
     js = json.load(conn)
     urllist = [data['images']['low_resolution']['url'] for data in js['data']]
-    return urllist[0]
+    return random.choice(urllist)
 
 def get_before_20130428():
     # nekostagramからデータを取得
